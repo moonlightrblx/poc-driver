@@ -1,4 +1,4 @@
-## overview
+## overview (ai generated cause im lazy)
 
 This project is a **POC Windows kernel driver** targeting **Windows 22H1** that demonstrates **kernel ↔ usermode communication** by **hooking `NtUserGetPointerProprietaryId` inside win32k**.
 
