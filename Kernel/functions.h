@@ -20,39 +20,12 @@ auto readvm(_requests* in) -> bool
 
 
 
-
-auto find_base(_requests* in) -> bool {
-	PEPROCESS source_process = NULL;
-	if (in->src_pid == 0) return false;
-
-	NTSTATUS status = PsLookupProcessByProcessId((HANDLE)in->src_pid, &source_process);
-	if (status != STATUS_SUCCESS) return false;
-
-	PEB* peb = PsGetProcessPeb(source_process);
-	if (!peb) {
-		ObDereferenceObject(source_process);
-		return false;
-	}
-	// easier than whatever other public methods there are 
-	// this CAN be spoofed tho and doing that will infact bsod you if the address is outside of valid memory
-	void* base_address = peb->image_base_address;
-
-	if (base_address) {
-		*(void**)in->dst_addr = base_address;
-	}
-
-	ObDereferenceObject(source_process);
-
-	return base_address != NULL;
-}
-
-
 auto requesthandler(_requests* pstruct) -> bool
 {
 	switch (pstruct->request_key) {
 
 	case DRIVER_BASE:
-		return find_base(pstruct);
+		return false;
 
 	case DRIVER_READVM:
 		return readvm(pstruct);
